@@ -22,31 +22,75 @@ function round(playerSelection, computerSelection) {
     }
 }
 function game() {
+    const score = document.getElementById("score");
+    const resultText = document.getElementById("result-text");
+    const paper = document.getElementById("paper");
+    const rock = document.getElementById("rock");
+    const scissors = document.getElementById("scissors");
+    const final = document.createElement("h1");
+    const reset = document.createElement("button");
     let playerScore = 0;
     let computerScore = 0;
-    for(let i=0; i<5; i++) {
+    let player = "";
+    let counter = 0;
+    paper.addEventListener("click", () => {
+        player = "paper";
+        getRound();
+        counter++;
+    });
+    rock.addEventListener("click", () => {
+        player = "rock";
+        getRound();
+        counter++;
+    });
+    scissors.addEventListener("click", () => {
+        player = "scissors";
+        getRound();
+        counter++;
+    });
+    reset.addEventListener("click", () => {
+        document.body.removeChild(final);
+        document.body.removeChild(reset);
+        document.body.appendChild(score);
+        document.body.appendChild(resultText);
+        document.body.appendChild(rock);
+        document.body.appendChild(paper);
+        document.body.appendChild(scissors);
+        player = "";
+        playerScore = 0;
+        computerScore = 0;
+        counter = 0;
+    });
+    function getRound() {
         let computer = computerPlay();
-        let player = prompt("Write: Paper, Rock or Scissors ")
-        player = player.toLowerCase();
         let result = round(player, computer);
         if (result == "win") {
             playerScore++;
-            console.log(`You win! ${player} beats ${computer}`);
+            resultText.textContent = `You win! ${player} beats ${computer}`;
         } else if (result == "lose") {
             computerScore++;
-            console.log(`You lose! ${computer} beats ${player}`);
+            resultText.textContent = `You lose! ${computer} beats ${player}`;
         } else {
-            console.log("Draw!");
+            resultText.textContent = "Draw!";
         }
-        console.log("Player score: " + playerScore + " | Computer score: " + computerScore);
+        score.textContent = "Player score: " + playerScore + " | Computer score: " + computerScore;
+        if(counter == 4) {
+            document.body.appendChild(final);
+            document.body.appendChild(reset);
+            document.body.removeChild(score);
+            document.body.removeChild(resultText);
+            document.body.removeChild(rock);
+            document.body.removeChild(paper);
+            document.body.removeChild(scissors);
+            reset.textContent = "Reset";
+            if(playerScore > computerScore) {
+                final.textContent = `You Win! \n Player score: ${playerScore} | Computer score: ${computerScore}`;
+            } else if(playerScore < computerScore) {
+                final.textContent = `You Lose! \n Player score: ${playerScore} | Computer score: ${computerScore}`;
+            } else {
+                final.textContent = `Draw! \n Player score: ${playerScore} | Computer score: ${computerScore}`;
+            }  
+        }
     }
-    if (playerScore > computerScore) {
-        console.log("You win!!!");
-    } else if (playerScore < computerScore) {
-        console.log("You lose!!!");
-    } else {
-        console.log("Draw!");
-    }
-    console.log("The finale score: \n" + "Your score: " + playerScore + "     Computer score: " + computerScore);
 }
 game();
